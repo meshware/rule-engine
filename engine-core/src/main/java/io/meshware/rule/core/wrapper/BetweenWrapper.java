@@ -14,61 +14,61 @@ import java.util.Map;
  * @param <T>
  * @author Zhiguo.Chen
  */
-public interface BetweenWrapper<T> extends Wrapper<T, AbstractWrapper> {
+public interface BetweenWrapper<T> extends Wrapper<T, AbstractWrapper<T>> {
 
-    BetweenWrapper lt(String filterCode, Object value);
+    BetweenWrapper<T> lt(String filterCode, Object value);
 
-    BetweenWrapper lt(String filterCode, String groupName, Object value);
+    BetweenWrapper<T> lt(String filterCode, String groupName, Object value);
 
-    BetweenWrapper lt(Class<AbstractFilter> filterClass, Object value);
+    BetweenWrapper<T> lt(Class<AbstractFilter<T>> filterClass, Object value);
 
-    BetweenWrapper lt(Class<AbstractFilter> filterClass, String groupName, Object value);
+    BetweenWrapper<T> lt(Class<AbstractFilter<T>> filterClass, String groupName, Object value);
 
-    BetweenWrapper gt(String filterCode, Object value);
+    BetweenWrapper<T> gt(String filterCode, Object value);
 
-    BetweenWrapper gt(String filterCode, String groupName, Object value);
+    BetweenWrapper<T> gt(String filterCode, String groupName, Object value);
 
-    BetweenWrapper gt(Class<AbstractFilter> filterClass, Object value);
+    BetweenWrapper<T> gt(Class<AbstractFilter<T>> filterClass, Object value);
 
-    BetweenWrapper gt(Class<AbstractFilter> filterClass, String groupName, Object value);
+    BetweenWrapper<T> gt(Class<AbstractFilter<T>> filterClass, String groupName, Object value);
 
-    BetweenWrapper between(String filterCode, BetweenCondition value);
+    BetweenWrapper<T> between(String filterCode, BetweenCondition<T> value);
 
-    BetweenWrapper between(Class<AbstractFilter> filterClass, BetweenCondition value);
+    BetweenWrapper<T> between(Class<AbstractFilter<T>> filterClass, BetweenCondition<T> value);
 
-    BetweenWrapper range(String filterCode, RangeCondition value);
+    BetweenWrapper<T> range(String filterCode, RangeCondition<T> value);
 
-    BetweenWrapper range(Class<AbstractFilter> filterClass, RangeCondition value);
+    BetweenWrapper<T> range(Class<AbstractFilter<T>> filterClass, RangeCondition<T> value);
 
-    Map<Class<AbstractFilter>, Map<String, BetweenCondition>> getBetweenConditions();
+    Map<Class<AbstractFilter<T>>, Map<String, BetweenCondition<T>>> getBetweenConditions();
 
-    Map<String, BetweenCondition> getBetweenConditions(Class filterClass);
+    Map<String, BetweenCondition<T>> getBetweenConditions(Class filterClass);
 
-    Map<Class<AbstractFilter>, Map<String, RangeCondition>> getRangeConditions();
+    Map<Class<AbstractFilter<T>>, Map<String, RangeCondition<T>>> getRangeConditions();
 
-    Map<String, RangeCondition> getRangeConditions(Class filterClass);
+    Map<String, RangeCondition<T>> getRangeConditions(Class filterClass);
 
     @Data
     @Accessors(chain = true)
-    class BetweenCondition<E> implements Serializable {
+    class BetweenCondition<T> implements Serializable {
 
         private String groupName;
 
-        private E ltValue;
+        private T ltValue;
 
-        private E gtValue;
+        private T gtValue;
     }
 
     @Data
     @Accessors(chain = true)
-    class RangeCondition<E> implements Serializable {
+    class RangeCondition<T> implements Serializable {
 
         private String groupName;
 
-        private E ltValue;
+        private T ltValue;
 
-        private E gtValue;
+        private T gtValue;
 
-        private List<BetweenCondition<E>> list;
+        private List<BetweenCondition<T>> list;
     }
 }

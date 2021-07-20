@@ -12,17 +12,17 @@ import java.util.List;
  * @param <T>
  * @author Zhiguo.Chen
  */
-public interface OrWrapper<T> extends Wrapper<T, AbstractWrapper> {
+public interface OrWrapper<T> extends Wrapper<T, AbstractWrapper<T>> {
 
-    OrWrapper or(String filterCode, Object value);
+    OrWrapper<T> or(String filterCode, Object value);
 
-    OrWrapper or(String filterCode, @NonNull List<Object> values);
+    OrWrapper<T> or(String filterCode, @NonNull List<Object> values);
 
-    OrWrapper or(Class<AbstractFilter> filterClass, Object value);
+    OrWrapper<T> or(Class<AbstractFilter<T>> filterClass, Object value);
 
-    OrWrapper or(Class<AbstractFilter> filterClass, @NonNull List<Object> values);
+    OrWrapper<T> or(Class<AbstractFilter<T>> filterClass, @NonNull List<Object> values);
 
-    Multimap<Class<AbstractFilter>, Object> getOrConditions();
+    Multimap<Class<AbstractFilter<T>>, Object> getOrConditions();
 
     List getOrConditions(Class filterClass);
 }

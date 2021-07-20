@@ -12,17 +12,17 @@ import java.util.List;
  * @param <T>
  * @author Zhiguo.Chen
  */
-public interface NinWrapper<T> extends Wrapper<T, AbstractWrapper> {
+public interface NinWrapper<T> extends Wrapper<T, AbstractWrapper<T>> {
 
-    NinWrapper nin(String filterCode, Object value);
+    NinWrapper<T> nin(String filterCode, Object value);
 
-    NinWrapper nin(String filterCode, @NonNull List<Object> values);
+    NinWrapper<T> nin(String filterCode, @NonNull List<Object> values);
 
-    NinWrapper nin(Class<AbstractFilter> filterClass, Object value);
+    NinWrapper<T> nin(Class<AbstractFilter<T>> filterClass, Object value);
 
-    NinWrapper nin(Class<AbstractFilter> filterClass, @NonNull List<Object> values);
+    NinWrapper<T> nin(Class<AbstractFilter<T>> filterClass, @NonNull List<Object> values);
 
-    Multimap<Class<AbstractFilter>, Object> getNinConditions();
+    Multimap<Class<AbstractFilter<T>>, Object> getNinConditions();
 
     List getNinConditions(Class filterClass);
 }

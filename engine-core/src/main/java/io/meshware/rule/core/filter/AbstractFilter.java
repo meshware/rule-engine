@@ -33,9 +33,9 @@ public abstract class AbstractFilter<T> implements Predicate<T> {
 
     private List<Object> orConditions;
 
-    private Map<String, BetweenWrapper.BetweenCondition> betweenConditions;
+    private Map<String, BetweenWrapper.BetweenCondition<T>> betweenConditions;
 
-    private Map<String, BetweenWrapper.RangeCondition> rangeConditions;
+    private Map<String, BetweenWrapper.RangeCondition<T>> rangeConditions;
 
     private Map<String, Object> fieldValues;
 

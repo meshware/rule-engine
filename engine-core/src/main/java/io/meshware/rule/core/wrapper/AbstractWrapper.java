@@ -21,25 +21,25 @@ import java.util.Set;
  */
 @Slf4j
 @Data
-public abstract class AbstractWrapper<T, E extends AbstractWrapper> implements Wrapper<T, AbstractWrapper>,
-        EqualWrapper<T>, InWrapper<T>, OrWrapper<T>, NinWrapper<T>, BetweenWrapper<T> {
+public abstract class AbstractWrapper<T>
+        implements Wrapper<T, AbstractWrapper<T>>, EqualWrapper<T>, InWrapper<T>, OrWrapper<T>, NinWrapper<T>, BetweenWrapper<T> {
 
     /**
      * Entities instance
      */
     protected List<T> entities;
 
-    private Map<Class<AbstractFilter>, Object> eqConditions = Maps.newConcurrentMap();
+    private Map<Class<AbstractFilter<T>>, Object> eqConditions = Maps.newConcurrentMap();
 
-    private Multimap<Class<AbstractFilter>, Object> inConditions = ArrayListMultimap.create();
+    private Multimap<Class<AbstractFilter<T>>, Object> inConditions = ArrayListMultimap.create();
 
-    private Multimap<Class<AbstractFilter>, Object> ninConditions = ArrayListMultimap.create();
+    private Multimap<Class<AbstractFilter<T>>, Object> ninConditions = ArrayListMultimap.create();
 
-    private Multimap<Class<AbstractFilter>, Object> orConditions = ArrayListMultimap.create();
+    private Multimap<Class<AbstractFilter<T>>, Object> orConditions = ArrayListMultimap.create();
 
-    private Map<Class<AbstractFilter>, Map<String, BetweenCondition>> betweenConditions = Maps.newConcurrentMap();
+    private Map<Class<AbstractFilter<T>>, Map<String, BetweenCondition<T>>> betweenConditions = Maps.newConcurrentMap();
 
-    private Map<Class<AbstractFilter>, Map<String, RangeCondition>> rangeConditions = Maps.newConcurrentMap();
+    private Map<Class<AbstractFilter<T>>, Map<String, RangeCondition<T>>> rangeConditions = Maps.newConcurrentMap();
 
     /**
      * 增加被过滤的实体对象
@@ -56,7 +56,7 @@ public abstract class AbstractWrapper<T, E extends AbstractWrapper> implements W
     }
 
     @Override
-    public void loadCondition(AbstractWrapper wrapper) {
+    public void loadCondition(AbstractWrapper<T> wrapper) {
         this.eqConditions = wrapper.getEqConditions();
         this.inConditions = wrapper.getInConditions();
         this.ninConditions = wrapper.getNinConditions();
@@ -66,12 +66,12 @@ public abstract class AbstractWrapper<T, E extends AbstractWrapper> implements W
     }
 
     @Override
-    public E and() {
-        return (E) this;
+    public AbstractWrapper<T> and() {
+        return (AbstractWrapper<T>) this;
     }
 
     @Override
-    public EqualWrapper eq(String filterCode, Object value) {
+    public EqualWrapper<T> eq(String filterCode, Object value) {
         try {
             eqConditions.put(FilterEnum.getByCode(filterCode).getClazz(), value);
         } catch (Exception e) {
@@ -81,13 +81,13 @@ public abstract class AbstractWrapper<T, E extends AbstractWrapper> implements W
     }
 
     @Override
-    public EqualWrapper eq(Class<AbstractFilter> filterClass, Object value) {
+    public EqualWrapper<T> eq(Class<AbstractFilter<T>> filterClass, Object value) {
         eqConditions.put(filterClass, value);
         return this;
     }
 
     @Override
-    public InWrapper in(String filterCode, Object value) {
+    public InWrapper<T> in(String filterCode, Object value) {
         try {
             if (value instanceof List) {
                 in(filterCode, (List) value);
@@ -101,9 +101,9 @@ public abstract class AbstractWrapper<T, E extends AbstractWrapper> implements W
     }
 
     @Override
-    public InWrapper in(String filterCode, @NonNull List<Object> values) {
+    public InWrapper<T> in(String filterCode, @NonNull List<Object> values) {
         try {
-            Class<AbstractFilter> filterClass = FilterEnum.getByCode(filterCode).getClazz();
+            Class<AbstractFilter<T>> filterClass = FilterEnum.getByCode(filterCode).getClazz();
             for (Object o : values) {
                 in(filterClass, o);
             }
@@ -114,7 +114,7 @@ public abstract class AbstractWrapper<T, E extends AbstractWrapper> implements W
     }
 
     @Override
-    public InWrapper in(Class<AbstractFilter> filterClass, Object value) {
+    public InWrapper<T> in(Class<AbstractFilter<T>> filterClass, Object value) {
         if (value instanceof List) {
             in(filterClass, (List) value);
         } else {
@@ -124,7 +124,7 @@ public abstract class AbstractWrapper<T, E extends AbstractWrapper> implements W
     }
 
     @Override
-    public InWrapper in(Class<AbstractFilter> filterClass, @NonNull List<Object> values) {
+    public InWrapper<T> in(Class<AbstractFilter<T>> filterClass, @NonNull List<Object> values) {
         for (Object o : values) {
             in(filterClass, o);
         }
@@ -132,7 +132,7 @@ public abstract class AbstractWrapper<T, E extends AbstractWrapper> implements W
     }
 
     @Override
-    public NinWrapper nin(String filterCode, Object value) {
+    public NinWrapper<T> nin(String filterCode, Object value) {
         try {
             if (value instanceof List) {
                 nin(filterCode, (List) value);
@@ -146,9 +146,9 @@ public abstract class AbstractWrapper<T, E extends AbstractWrapper> implements W
     }
 
     @Override
-    public NinWrapper nin(String filterCode, @NonNull List<Object> values) {
+    public NinWrapper<T> nin(String filterCode, @NonNull List<Object> values) {
         try {
-            Class<AbstractFilter> filterClass = FilterEnum.getByCode(filterCode).getClazz();
+            Class<AbstractFilter<T>> filterClass = FilterEnum.getByCode(filterCode).getClazz();
             for (Object o : values) {
                 nin(filterClass, o);
             }
@@ -159,7 +159,7 @@ public abstract class AbstractWrapper<T, E extends AbstractWrapper> implements W
     }
 
     @Override
-    public NinWrapper nin(Class<AbstractFilter> filterClass, Object value) {
+    public NinWrapper<T> nin(Class<AbstractFilter<T>> filterClass, Object value) {
         if (value instanceof List) {
             nin(filterClass, (List) value);
         } else {
@@ -169,7 +169,7 @@ public abstract class AbstractWrapper<T, E extends AbstractWrapper> implements W
     }
 
     @Override
-    public NinWrapper nin(Class<AbstractFilter> filterClass, @NonNull List<Object> values) {
+    public NinWrapper<T> nin(Class<AbstractFilter<T>> filterClass, @NonNull List<Object> values) {
         for (Object o : values) {
             nin(filterClass, o);
         }
@@ -177,7 +177,7 @@ public abstract class AbstractWrapper<T, E extends AbstractWrapper> implements W
     }
 
     @Override
-    public OrWrapper or(String filterCode, Object value) {
+    public OrWrapper<T> or(String filterCode, Object value) {
         try {
             if (value instanceof List) {
                 or(filterCode, (List) value);
@@ -191,9 +191,9 @@ public abstract class AbstractWrapper<T, E extends AbstractWrapper> implements W
     }
 
     @Override
-    public OrWrapper or(String filterCode, @NonNull List<Object> values) {
+    public OrWrapper<T> or(String filterCode, @NonNull List<Object> values) {
         try {
-            Class<AbstractFilter> filterClass = FilterEnum.getByCode(filterCode).getClazz();
+            Class<AbstractFilter<T>> filterClass = FilterEnum.getByCode(filterCode).getClazz();
             for (Object o : values) {
                 or(filterClass, o);
             }
@@ -204,7 +204,7 @@ public abstract class AbstractWrapper<T, E extends AbstractWrapper> implements W
     }
 
     @Override
-    public OrWrapper or(Class<AbstractFilter> filterClass, Object value) {
+    public OrWrapper<T> or(Class<AbstractFilter<T>> filterClass, Object value) {
         if (value instanceof List) {
             or(filterClass, (List) value);
         } else {
@@ -214,7 +214,7 @@ public abstract class AbstractWrapper<T, E extends AbstractWrapper> implements W
     }
 
     @Override
-    public OrWrapper or(Class<AbstractFilter> filterClass, @NonNull List<Object> values) {
+    public OrWrapper<T> or(Class<AbstractFilter<T>> filterClass, @NonNull List<Object> values) {
         for (Object o : values) {
             or(filterClass, o);
         }
@@ -222,8 +222,8 @@ public abstract class AbstractWrapper<T, E extends AbstractWrapper> implements W
     }
 
     @Override
-    public Set<Class<AbstractFilter>> getFilters() {
-        Set<Class<AbstractFilter>> filterEnums = Sets.newConcurrentHashSet();
+    public Set<Class<AbstractFilter<T>>> getFilters() {
+        Set<Class<AbstractFilter<T>>> filterEnums = Sets.newConcurrentHashSet();
         filterEnums.addAll(eqConditions.keySet());
         filterEnums.addAll(orConditions.keySet());
         filterEnums.addAll(inConditions.keySet());
@@ -260,9 +260,9 @@ public abstract class AbstractWrapper<T, E extends AbstractWrapper> implements W
     }
 
     @Override
-    public BetweenWrapper lt(String filterCode, String groupName, Object value) {
+    public BetweenWrapper<T> lt(String filterCode, String groupName, Object value) {
         try {
-            Class<AbstractFilter> filterClass = FilterEnum.getByCode(filterCode).getClazz();
+            Class<AbstractFilter<T>> filterClass = FilterEnum.getByCode(filterCode).getClazz();
             lt(filterClass, groupName, value);
         } catch (Exception e) {
             log.error("Add condition value error, filterCode={}", filterCode);
@@ -271,24 +271,24 @@ public abstract class AbstractWrapper<T, E extends AbstractWrapper> implements W
     }
 
     @Override
-    public BetweenWrapper lt(Class<AbstractFilter> filterClass, Object value) {
+    public BetweenWrapper<T> lt(Class<AbstractFilter<T>> filterClass, Object value) {
         lt(filterClass, "default", value);
         return this;
     }
 
     @Override
-    public BetweenWrapper lt(Class<AbstractFilter> filterClass, String groupName, Object value) {
+    public BetweenWrapper<T> lt(Class<AbstractFilter<T>> filterClass, String groupName, Object value) {
         try {
-            Map<String, BetweenCondition> betweenConditionMap = betweenConditions.get(filterClass);
+            Map<String, BetweenCondition<T>> betweenConditionMap = betweenConditions.get(filterClass);
             if (Objects.isNull(betweenConditionMap)) {
                 betweenConditionMap = Maps.newHashMap();
             }
-            BetweenCondition betweenCondition = betweenConditionMap.get(groupName);
+            BetweenCondition<T> betweenCondition = betweenConditionMap.get(groupName);
             if (Objects.isNull(betweenCondition)) {
-                betweenCondition = new BetweenCondition();
+                betweenCondition = new BetweenCondition<T>();
             }
             betweenCondition.setGroupName(groupName);
-            betweenCondition.setLtValue(value);
+            betweenCondition.setLtValue((T) value);
 
             betweenConditionMap.put(betweenCondition.getGroupName(), betweenCondition);
             betweenConditions.put(filterClass, betweenConditionMap);
@@ -299,15 +299,15 @@ public abstract class AbstractWrapper<T, E extends AbstractWrapper> implements W
     }
 
     @Override
-    public BetweenWrapper gt(String filterCode, Object value) {
+    public BetweenWrapper<T> gt(String filterCode, Object value) {
         gt(filterCode, "default", value);
         return this;
     }
 
     @Override
-    public BetweenWrapper gt(String filterCode, String groupName, Object value) {
+    public BetweenWrapper<T> gt(String filterCode, String groupName, Object value) {
         try {
-            Class<AbstractFilter> filterClass = FilterEnum.getByCode(filterCode).getClazz();
+            Class<AbstractFilter<T>> filterClass = FilterEnum.getByCode(filterCode).getClazz();
             gt(filterClass, groupName, value);
         } catch (Exception e) {
             log.error("Add condition value error, filterCode={}", filterCode);
@@ -316,24 +316,24 @@ public abstract class AbstractWrapper<T, E extends AbstractWrapper> implements W
     }
 
     @Override
-    public BetweenWrapper gt(Class<AbstractFilter> filterClass, Object value) {
+    public BetweenWrapper<T> gt(Class<AbstractFilter<T>> filterClass, Object value) {
         gt(filterClass, "default", value);
         return this;
     }
 
     @Override
-    public BetweenWrapper gt(Class<AbstractFilter> filterClass, String groupName, Object value) {
+    public BetweenWrapper<T> gt(Class<AbstractFilter<T>> filterClass, String groupName, Object value) {
         try {
-            Map<String, BetweenCondition> betweenConditionMap = betweenConditions.get(filterClass);
+            Map<String, BetweenCondition<T>> betweenConditionMap = betweenConditions.get(filterClass);
             if (Objects.isNull(betweenConditionMap)) {
                 betweenConditionMap = Maps.newHashMap();
             }
-            BetweenCondition betweenCondition = betweenConditionMap.get(groupName);
+            BetweenCondition<T> betweenCondition = betweenConditionMap.get(groupName);
             if (Objects.isNull(betweenCondition)) {
                 betweenCondition = new BetweenCondition();
             }
             betweenCondition.setGroupName(groupName);
-            betweenCondition.setGtValue(value);
+            betweenCondition.setGtValue((T) value);
 
             betweenConditionMap.put(betweenCondition.getGroupName(), betweenCondition);
             betweenConditions.put(filterClass, betweenConditionMap);
@@ -344,16 +344,16 @@ public abstract class AbstractWrapper<T, E extends AbstractWrapper> implements W
     }
 
     @Override
-    public BetweenWrapper between(String filterCode, BetweenCondition value) {
-        Class<AbstractFilter> filterClass = FilterEnum.getByCode(filterCode).getClazz();
+    public BetweenWrapper<T> between(String filterCode, BetweenCondition<T> value) {
+        Class<AbstractFilter<T>> filterClass = FilterEnum.getByCode(filterCode).getClazz();
         between(filterClass, value);
         return this;
     }
 
     @Override
-    public BetweenWrapper between(Class<AbstractFilter> filterClass, BetweenCondition value) {
+    public BetweenWrapper<T> between(Class<AbstractFilter<T>> filterClass, BetweenCondition<T> value) {
         try {
-            Map<String, BetweenCondition> betweenConditionMap = betweenConditions.get(filterClass);
+            Map<String, BetweenCondition<T>> betweenConditionMap = betweenConditions.get(filterClass);
             if (Objects.isNull(betweenConditionMap)) {
                 betweenConditionMap = Maps.newHashMap();
             }
@@ -366,21 +366,21 @@ public abstract class AbstractWrapper<T, E extends AbstractWrapper> implements W
     }
 
     @Override
-    public Map<String, BetweenCondition> getBetweenConditions(Class filterClass) {
+    public Map<String, BetweenCondition<T>> getBetweenConditions(Class filterClass) {
         return betweenConditions.get(filterClass);
     }
 
     @Override
-    public BetweenWrapper range(String filterCode, RangeCondition value) {
-        Class<AbstractFilter> filterClass = FilterEnum.getByCode(filterCode).getClazz();
+    public BetweenWrapper<T> range(String filterCode, RangeCondition<T> value) {
+        Class<AbstractFilter<T>> filterClass = FilterEnum.getByCode(filterCode).getClazz();
         range(filterClass, value);
         return this;
     }
 
     @Override
-    public BetweenWrapper range(Class<AbstractFilter> filterClass, RangeCondition value) {
+    public BetweenWrapper<T> range(Class<AbstractFilter<T>> filterClass, RangeCondition<T> value) {
         try {
-            Map<String, RangeCondition> rangeConditionMap = rangeConditions.get(filterClass);
+            Map<String, RangeCondition<T>> rangeConditionMap = rangeConditions.get(filterClass);
             if (Objects.isNull(rangeConditionMap)) {
                 rangeConditionMap = Maps.newHashMap();
             }
@@ -393,7 +393,7 @@ public abstract class AbstractWrapper<T, E extends AbstractWrapper> implements W
     }
 
     @Override
-    public Map<String, RangeCondition> getRangeConditions(Class filterClass) {
+    public Map<String, RangeCondition<T>> getRangeConditions(Class filterClass) {
         return rangeConditions.get(filterClass);
     }
 }

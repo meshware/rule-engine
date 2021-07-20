@@ -10,7 +10,7 @@ import java.util.Set;
  *
  * @author Zhiguo.Chen
  */
-public interface Wrapper<T, E extends AbstractWrapper> {
+public interface Wrapper<T, E extends Wrapper<T, E>> {
 
     /**
      * 增加被过滤的实体对象
@@ -28,7 +28,7 @@ public interface Wrapper<T, E extends AbstractWrapper> {
      */
     List<T> getEntities();
 
-    Set<Class<AbstractFilter>> getFilters();
+    Set<Class<AbstractFilter<T>>> getFilters();
 
     //List<AbstractFilter> getCustomFilters();
 

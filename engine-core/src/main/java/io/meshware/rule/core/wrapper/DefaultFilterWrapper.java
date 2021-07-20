@@ -7,7 +7,7 @@ import java.util.List;
  *
  * @author Zhiguo.Chen
  */
-public class DefaultFilterWrapper<T> extends AbstractWrapper<T, DefaultFilterWrapper> {
+public class DefaultFilterWrapper<T> extends AbstractWrapper<T> {
 
     public DefaultFilterWrapper() {
     }
@@ -17,7 +17,7 @@ public class DefaultFilterWrapper<T> extends AbstractWrapper<T, DefaultFilterWra
     }
 
     @Override
-    public DefaultFilterWrapper and() {
+    public DefaultFilterWrapper<T> and() {
         return this;
     }
 

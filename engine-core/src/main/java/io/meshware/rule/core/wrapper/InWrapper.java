@@ -12,17 +12,17 @@ import java.util.List;
  * @param <T>
  * @author Zhiguo.Chen
  */
-public interface InWrapper<T> extends Wrapper<T, AbstractWrapper> {
+public interface InWrapper<T> extends Wrapper<T, AbstractWrapper<T>> {
 
-    InWrapper in(String filterCode, Object value);
+    InWrapper<T> in(String filterCode, Object value);
 
-    InWrapper in(String filterCode, @NonNull List<Object> values);
+    InWrapper<T> in(String filterCode, @NonNull List<Object> values);
 
-    InWrapper in(Class<AbstractFilter> filterClass, Object value);
+    InWrapper<T> in(Class<AbstractFilter<T>> filterClass, Object value);
 
-    InWrapper in(Class<AbstractFilter> filterClass, @NonNull List<Object> values);
+    InWrapper<T> in(Class<AbstractFilter<T>> filterClass, @NonNull List<Object> values);
 
-    Multimap<Class<AbstractFilter>, Object> getInConditions();
+    Multimap<Class<AbstractFilter<T>>, Object> getInConditions();
 
     List getInConditions(Class filterClass);
 

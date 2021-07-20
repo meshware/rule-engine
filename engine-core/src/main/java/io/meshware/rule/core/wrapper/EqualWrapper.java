@@ -10,13 +10,13 @@ import java.util.Map;
  * @param <T>
  * @author Zhiguo.Chen
  */
-public interface EqualWrapper<T> extends Wrapper<T, AbstractWrapper> {
+public interface EqualWrapper<T> extends Wrapper<T, AbstractWrapper<T>> {
 
-    EqualWrapper eq(String filterCode, Object value);
+    EqualWrapper<T> eq(String filterCode, Object value);
 
-    EqualWrapper eq(Class<AbstractFilter> filterClass, Object value);
+    EqualWrapper<T> eq(Class<AbstractFilter<T>> filterClass, Object value);
 
-    Map<Class<AbstractFilter>, Object> getEqConditions();
+    Map<Class<AbstractFilter<T>>, Object> getEqConditions();
 
     Object getEqConditions(Class filterClass);
 }
