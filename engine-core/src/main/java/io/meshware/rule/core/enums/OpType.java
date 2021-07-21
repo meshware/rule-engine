@@ -39,7 +39,6 @@ public enum OpType {
     }
 
     public static OpType getOpTypeByCode(String code) {
-
         for (OpType opType : values()) {
             if (opType.getCode().equals(code)) {
                 return opType;

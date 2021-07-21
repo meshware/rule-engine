@@ -61,15 +61,15 @@ public abstract class AbstractFilter<T> implements Predicate<T> {
     /**
      * Verify the result and return true or false
      *
-     * @param o
-     * @return
+     * @param o data
+     * @return boolen
      */
     public abstract boolean validate(T o);
 
     /**
      * Extract value by annotation from entity
      *
-     * @param object
+     * @param object data
      */
     private void extractValue(T object) {
         Set<Field> fieldList = getAllFields(object.getClass());
@@ -140,8 +140,8 @@ public abstract class AbstractFilter<T> implements Predicate<T> {
     /**
      * Get all fields include it's parent class
      *
-     * @param clazz
-     * @return
+     * @param clazz class
+     * @return Set
      */
     private Set<Field> getAllFields(Class clazz) {
         Set fields = Sets.newHashSet();
@@ -154,8 +154,8 @@ public abstract class AbstractFilter<T> implements Predicate<T> {
     /**
      * Get value from request or entity
      *
-     * @param fieldName
-     * @return
+     * @param fieldName fileName
+     * @return value
      */
     public <R> R getValue(String fieldName) {
         Object result = null;
